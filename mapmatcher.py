@@ -17,13 +17,6 @@ import numpy as np
 import scipy
 from scipy import stats, sparse
 
-# pandas version
-# .iteritems() removed in pandas > 1.5
-# https://pandas.pydata.org/pandas-docs/version/1.5/reference/api/pandas.DataFrame.iteritems.html
-pandas_version_string = pd.__version__
-pandas_version_parts = [int(part) for part in pandas_version_string.split('.') if part.isdigit()]
-no_iteritems = (pandas_version_parts[0]>=2) or ((pandas_version_parts[0]==1) and (pandas_version_parts[1]>=5))
-
 # pgMapMatch tools
 from . import tools as mmt
 
@@ -114,18 +107,12 @@ class traceCleaner():
                 df.loc[mask, oldCols] = df.loc[mask, newCols].values
                 df.loc[mask, ['speed'+str(s) for s in range(max(lag+1, 6-gSize), 6)]] = np.nan
 
-            if no_iteritems:
-                ptsToDrop += list(df[df.dropPt].set_index('traceid').ptid.items())
-            else:
-                ptsToDrop += list(df[df.dropPt].set_index('traceid').ptid.iteritems())
+            ptsToDrop += list(df[df.dropPt].set_index('traceid').ptid.items())
             df = df[df.dropPt == False]
 
         # Finally, select any 'singletons' where there is one errant point
         # that's not picked up by the lagged values
-        if no_iteritems:
-            ptsToDrop += list(df[df.dropPt].set_index('traceid').ptid.items())
-        else:
-            ptsToDrop += list(df[df.speed1 > self.maxSpeed].set_index('traceid').ptid.iteritems())
+        ptsToDrop += list(df[df.dropPt].set_index('traceid').ptid.items())
 
         self.ptsToDrop = ptsToDrop
 
