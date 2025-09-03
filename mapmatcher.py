@@ -22,8 +22,7 @@ from scipy import stats, sparse
 # https://pandas.pydata.org/pandas-docs/version/1.5/reference/api/pandas.DataFrame.iteritems.html
 pandas_version_string = pd.__version__
 pandas_version_parts = [int(part) for part in pandas_version_string.split('.') if part.isdigit()]
-no_iteritems = (pandas_version_parts[0]>=2) or ((pandas_version_parts[0]>=1) and (pandas_version_parts[1]>=5))
-print(f"Using pandas {pandas_version_string}. No .iteritems()?", str(no_iteritems))
+no_iteritems = (pandas_version_parts[0]>=2) or ((pandas_version_parts[0]==1) and (pandas_version_parts[1]>=5))
 
 # pgMapMatch tools
 from . import tools as mmt
